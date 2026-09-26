@@ -1,0 +1,6 @@
+﻿Name [displayName] Required,User name [userPrincipalName] Required,Initial password [passwordProfile] Required,Account enabled (true/false) [accountEnabled],First name [givenName],Last name [surname],Job title [jobTitle],Department [department],Usage location [usageLocation],Street address [streetAddress],State or province [state],Country or region [country],Office [officeLocation],City [city],ZIP or postal code [postalCode],Business phone [businessPhones],Mobile phone [mobilePhone]
+Jamison Fawkes,jfawkes@dknorringtonzohomail.onmicrosoft.com,<REDACTED>,true,Jamison,Fawkes,Security Operations Analyst,Security,US,,GA,United States,Atlanta HQ,Atlanta,,,
+Lena Oxton,loxton@dknorringtonzohomail.onmicrosoft.com,<REDACTED>,true,Lena,Oxton,Account Executive,Sales,US,,GA,United States,Atlanta HQ,Atlanta,,,
+Lúcio Correia dos Santos,ldossantos@dknorringtonzohomail.onmicrosoft.com,<REDACTED>,true,Lúcio,Correia dos Santos,Marketing Coordinator,Marketing,US,,GA,United States,Atlanta HQ,Atlanta,,,
+Maugaloa Malosi,mmalosi@dknorringtonzohomail.onmicrosoft.com,<REDACTED>,true,Maugaloa,Malosi,IT Systems Administrator,IT,US,,GA,United States,Atlanta HQ,Atlanta,,,
+Vaira Singhania,vsinghania@dknorringtonzohomail.onmicrosoft.com,<REDACTED>,true,Vaira,Singhania,Financial Analyst,Finance,US,,GA,United States,Atlanta HQ,Atlanta,,,
