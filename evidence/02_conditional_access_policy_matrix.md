@@ -9,7 +9,7 @@ License: Microsoft Entra ID P2 (trial), assigned through the group LIC_Entra_ID_
 | CA002_Require_Compliant_Device | All users | CA_Exclude_BreakGlass | All resources | None (all platforms kept in scope) | Require device to be marked as compliant | Report only (no Intune in this tenant) |
 | CA003_Block_High_Risk_SignIns | All users | CA_Exclude_BreakGlass | All resources | Sign in risk: High | Block access | On |
 | CA004_Block_Outside_Allowed_Countries | All users | CA_Exclude_BreakGlass, CA_Exclude_Travel_Approved | All resources | Network: include any location, exclude NL_Allowed_Countries | Block access | On |
-| CA005 break glass alert | Not a Conditional Access policy | | | | | Deferred to Week 8 (PowerShell and Microsoft Graph). Interim control: saved sign in log filter |
+| CA005 break glass alert | Not a Conditional Access policy | | | | | Built in Week 8. `Watch-BreakGlassSignIn.ps1` queries Entra sign in logs through Microsoft Graph by userPrincipalName and writes Event 9001 or 9002 to the Windows Event Log. See [powershell_iam_automation](https://github.com/GokuCooper/powershell_iam_automation) |
 
 ## Supporting objects
 
@@ -20,6 +20,7 @@ License: Microsoft Entra ID P2 (trial), assigned through the group LIC_Entra_ID_
 | CA_Exclude_Travel_Approved | Security group, assigned | Temporary travel exceptions for CA004 only |
 | LIC_Entra_ID_P2_Users | Security group, assigned | Group based licensing for Entra ID P2 |
 | NL_Allowed_Countries | Countries named location (IP based), United States, unknown countries not included | The "safe" location for CA004 |
+| Watch-BreakGlassSignIn.ps1 | PowerShell script, Microsoft Graph (AuditLog.Read.All, Directory.Read.All, read only), built in Week 8 | Alerts on every breakglass01 sign in, successful or failed. See [powershell_iam_automation](https://github.com/GokuCooper/powershell_iam_automation) |
 
 ## Privileged Identity Management: User Administrator
 

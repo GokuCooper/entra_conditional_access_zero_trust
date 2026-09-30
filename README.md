@@ -72,9 +72,9 @@ I also changed how the principal's office works. Instead of a teacher carrying t
   CA003  High risk = Block .. On     CA_Exclude_BreakGlass              2 hours, MFA,
   CA004  Outside US = Block . On       (excluded from ALL policies)     justification, approval
           │                                 │                          Approver: DKN Lab Admin
-          ├── NL_Allowed_Countries (US)     └── CA005 alert: deferred
-          └── CA_Exclude_Travel_Approved        to Week 8 (Graph),
-                (Lena Oxton)                    interim log filter
+          ├── NL_Allowed_Countries (US)     └── CA005 alert: built in
+          └── CA_Exclude_Travel_Approved        Week 8 (PowerShell + Graph,
+                (Lena Oxton)                    Windows Event Log)
 ```
 
 ---
@@ -458,6 +458,12 @@ I compared three options: a new Pay as you go subscription (small cost, real ent
 
 **Known constraint for Week 8:** this tenant has no Exchange mailbox, so the alert cannot email through Graph. It will write to a log, the Windows Event Log, or a webhook instead.
 
+### Update: CA005 is built
+
+I built the alert in Week 8 and kept both promises from this section. The script, `Watch-BreakGlassSignIn.ps1`, queries the Entra sign in logs through Microsoft Graph by **userPrincipalName**, not display name, and writes the alert to the **Windows Event Log** (Event ID 9001 when the account is used, 9002 when there are only failed attempts), plus an evidence CSV. It uses read only Graph scopes consented for my admin account only.
+
+In testing it caught a real break glass sign in: 5 log entries in 24 hours, which triage showed were 2 actual sign ins and 0 attacks. Every entry showed Conditional Access **notApplied**, which is this lab's exclusion group working exactly as designed. The full build, screenshots, and triage are in [powershell_iam_automation](https://github.com/GokuCooper/powershell_iam_automation) (Part 6, Screenshots 40 to 45).
+
 ---
 
 ## Part 7: Just in time admin access with PIM
@@ -752,7 +758,7 @@ That last detail matters. With Security Defaults off and break glass excluded fr
 | CA002 Compliant device | Report only by design (no Intune) | Screenshots 049 to 051, 105 |
 | CA003 Block high risk | On. Proven to block in simulation | Screenshots 052 to 054, 094 to 096, 103 |
 | CA004 Block outside US | On, with a working travel exception | Screenshots 055 to 064, 088 to 093, 104 |
-| CA005 Break glass alert | Deferred to Week 8, interim log filter in place | Screenshots 065 to 067 |
+| CA005 Break glass alert | Built in Week 8 with PowerShell and Microsoft Graph. Detects every break glass sign in, writes Event 9001 or 9002, and saves evidence. See [powershell_iam_automation](https://github.com/GokuCooper/powershell_iam_automation) | Screenshots 065 to 067, Week 8 Screenshots 40 to 45 |
 | PIM for User Administrator | Eligible, 2 hours, MFA, justification, approval, loophole closed, full lifecycle audited | Screenshots 068 to 083 |
 | Validation | What If 5 for 5, live enforcement, sign in log evidence | Screenshots 084 to 120 |
 
@@ -772,7 +778,7 @@ That last detail matters. With Security Defaults off and break glass excluded fr
 | 8 | Read only billing page | Separation of duties | Global Admin is not a billing role | Assigned billing account owner |
 | 9 | Invalid usage location | User data | No country on the user | Set usage location, then built it into every account |
 | 10 | Must disable Security Defaults to enable | Platform rule | Only Report only allowed while defaults are on | Built in Report only, cut over later |
-| 11 | Log filter found nothing | Detection design | Filter matches display name, not UPN | Filtered on display name, Week 8 uses UPN |
+| 11 | Log filter found nothing | Detection design | Filter matches display name, not UPN | Filtered on display name. The Week 8 script queries by UPN |
 | 12 | Permanent active allowed | PIM defaults | Default role settings allow bypass | Disabled permanent active, required MFA |
 | 13 | Deactivate failed | PIM rule | 5 minute minimum active duration | Waited past 5 minutes |
 | 14 | What If rejected country | Tool rule | Country needs a matching IP | Used public IPs that map to each country |
@@ -797,7 +803,7 @@ That last detail matters. With Security Defaults off and break glass excluded fr
 
 ## What I would change before calling this production ready
 
-- **Build CA005 for real** (Week 8), querying sign ins by userPrincipalName and sending the alert to a monitored channel.
+- **~~Build CA005 for real (Week 8)~~ Done.** Built in [powershell_iam_automation](https://github.com/GokuCooper/powershell_iam_automation), querying sign ins by userPrincipalName and alerting to the Windows Event Log. Next step: run it unattended with an app registration and certificate, and forward the event to a monitored channel.
 - **Protect break glass with phishing resistant MFA.** A FIDO2 security key stored in a safe, plus a dedicated policy that requires an authentication strength for the break glass group only, instead of relying on a phone.
 - **Add a second break glass account**, so one lost key is not a single point of failure.
 - **Move CA001 to an authentication strength** that requires phishing resistant methods for admins.
